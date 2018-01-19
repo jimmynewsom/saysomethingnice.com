@@ -1,0 +1,43 @@
+doctype html
+html(lang="en")
+  head
+    meta(charset="utf-8")
+    meta(name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no")
+    meta(name="description" content="practice app using bootstrap, express, and node, deployed to AWS")
+    meta(name="author" content="jimmynewsom")
+    link(rel="icon" href="favicon.ico")
+
+    title SaySomethingNice.com
+
+    link(rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous")
+
+    link(href="starter-template.css" rel="stylesheet")
+
+  body
+    nav(class="navbar navbar-expand-md navbar-dark bg-dark fixed-top")
+      a(class="navbar-brand" href="/") SaySomethingNice
+      button(class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation")
+        span(class="navbar-toggler-icon")
+
+      div(class="collapse navbar-collapse" id="navbarsExampleDefault")
+        ul(class="navbar-nav mr-auto")
+          li(class="nav-item active")
+            a(class="nav-link" href="/") Home
+              span(class="sr-only") (current)
+        form(class="form-inline my-2 my-lg-0")
+          input(class="form-control mr-sm-2" type="text" placeholder="Search" aria-label="Search")
+          button(class="btn btn-outline-success my-2 my-sm-0" type="submit") Search
+
+    main(role="main" class="container")
+
+      div(class="starter-template")
+        h1 Welcome to SaySomethingNice.com
+        p (I'm using a bootstrap template as a way to quickly start a new project.)
+        h5 Here's a message from a stranger:
+        p(id="message")= message
+        p Say something nice to a stranger on the internet :)
+        form(action="message_received" method="post")
+            textarea(name="message" class="form-control" id="exampleFormControlTextarea1" rows="3")
+            input(type="submit" value="Submit")
+        
+    script(src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous")
