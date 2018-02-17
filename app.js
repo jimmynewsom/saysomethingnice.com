@@ -1,14 +1,21 @@
 const express = require('express');
+var helmet = require('helmet');
 var path = require('path');
 var bodyParser = require('body-parser');
+var expressSanitizer = require('express-sanitizer');
 
 const app = express();
+
+app.use(helmet());
 
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
+
+app.use(expressSanitizer());
+
 app.use(express.static('public'));
 
 var message = "hello world";
@@ -19,7 +26,7 @@ app.get('/', (req, res) =>
 });
 
 app.post('/message_received', (req, res) => {  //send a message to a stranger :)
-    message = req.body.message;
+    message = req.sanitize(req.body.message);
     res.sendFile('message_received.html', {root: 'views'});
 });
 
