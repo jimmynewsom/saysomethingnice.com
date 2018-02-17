@@ -30,4 +30,4 @@ app.post('/message_received', (req, res) => {  //send a message to a stranger :)
     res.sendFile('message_received.html', {root: 'views'});
 });
 
-app.listen(3000, () => console.log('app listening on port 3000!'));
+app.listen(process.env.PORT || 3000, () => console.log('app listening on port 3000!'));
