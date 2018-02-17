@@ -18,7 +18,7 @@ app.use(expressSanitizer());
 
 app.use(express.static('public'));
 
-var message = "hello world";
+var message = process.env.message || "hello world";
 
 app.get('/', (req, res) => 
 {   
@@ -27,6 +27,7 @@ app.get('/', (req, res) =>
 
 app.post('/message_received', (req, res) => {  //send a message to a stranger :)
     message = req.sanitize(req.body.message);
+    process.env.message = message;
     res.sendFile('message_received.html', {root: 'views'});
 });
 
