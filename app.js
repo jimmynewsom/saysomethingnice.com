@@ -29,14 +29,17 @@ MongoClient.connect(process.env.MONGODB_URI, function(err, db) {
 
     app.get('/', (req, res) => 
     {   
-        message = await db.collection('storage').findOne({}, {message:1});
-        res.render('index', {message: message.message});
+        db.collection('storage').findOne({}, {message:1}, function(err, doc){
+            message = doc.message;
+            res.render('index', {message: message});
+        });
     });
 
     app.post('/message_received', (req, res) => {  //send a message to a stranger :)
         message = req.sanitize(req.body.message);
-        await db.collection('storage').findOneAndUpdate({}, {message: message});
-        res.sendFile('message_received.html', {root: 'views'});
+        db.collection('storage').findOneAndUpdate({}, {message: message}, function(err, result){
+            res.sendFile('message_received.html', {root: 'views'});
+        });
     });
 
     app.listen(process.env.PORT || 3000, () => console.log('app listening on port 3000!'));
