@@ -4,6 +4,11 @@ var path = require('path');
 var bodyParser = require('body-parser');
 var expressSanitizer = require('express-sanitizer');
 
+//there's better ways to do this than MongoDB. lots of dead weight.
+// but I can do this on Heroku for free, so fuck it
+const MongoClient = require('mongodb').MongoClient;
+const assert = require('assert');
+
 const app = express();
 
 app.use(helmet());
@@ -18,17 +23,22 @@ app.use(expressSanitizer());
 
 app.use(express.static('public'));
 
-var message = process.env.message || "hello world";
+MongoClient.connect(process.env.MONGODB_URI, function(err, db) {
 
-app.get('/', (req, res) => 
-{   
-    res.render('index', {message: message});
+    var message;
+
+    app.get('/', (req, res) => 
+    {   
+        message = await db.collection('storage').findOne({}, {message:1});
+        res.render('index', {message: message.message});
+    });
+
+    app.post('/message_received', (req, res) => {  //send a message to a stranger :)
+        message = req.sanitize(req.body.message);
+        await db.collection('storage').findOneAndUpdate({}, {message: message});
+        res.sendFile('message_received.html', {root: 'views'});
+    });
+
+    app.listen(process.env.PORT || 3000, () => console.log('app listening on port 3000!'));
+
 });
-
-app.post('/message_received', (req, res) => {  //send a message to a stranger :)
-    message = req.sanitize(req.body.message);
-    process.env.message = message;
-    res.sendFile('message_received.html', {root: 'views'});
-});
-
-app.listen(process.env.PORT || 3000, () => console.log('app listening on port 3000!'));
