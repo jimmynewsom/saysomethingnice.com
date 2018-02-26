@@ -20,20 +20,22 @@ app.use(express.static('public'));
 
 var message;
 
-MongoClient.connect(process.env.MONGODB_URI, function(err, db) {
+MongoClient.connect(process.env.MONGODB_URI, (err, db) =>
+{
     assert.equal(null, err);
     console.log("connected successfully to server");
 
-    app.get('/', (req, res) => 
+    app.get('/', (req, res, db) => 
     {   
-        db.collection('storage').findOne({}, {message:1}, function(err, doc){
+        db.collection('storage').findOne({}, {message : 1, _id : 0}, (err, doc) => 
+        {
             console.log(doc);
             message = doc.message;
             res.render('index', {message: message});
         });
     });
 
-    app.post('/message_received', (req, res) => {  //send a message to a stranger :)
+    app.post('/message_received', (req, res, db) => {  //send a message to a stranger :)
         message = req.sanitize(req.body.message);
         db.collection('storage').findOneAndUpdate({}, {message: message}, function(err, result){
             console.log(result);
