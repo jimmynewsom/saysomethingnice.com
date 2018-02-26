@@ -20,12 +20,16 @@ app.use(express.static('public'));
 
 var message;
 
-MongoClient.connect(process.env.MONGODB_URI, (err, db) =>
+MongoClient.connect(process.env.MONGODB_URI, (err, database) =>
 {
     assert.equal(null, err);
     console.log("connected successfully to server");
 
-    app.get('/', (req, res, db) => 
+    console.log(database);
+
+    const db = database.db('heroku_8728mxs3');
+
+    app.get('/', (req, res) => 
     {   
         db.collection('storage').findOne({}, {message : 1, _id : 0}, (err, doc) => 
         {
